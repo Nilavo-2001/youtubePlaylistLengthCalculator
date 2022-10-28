@@ -34,7 +34,7 @@ async function scrollTillEnd(totalVideos) {
     await page.evaluate((height) => {
       window.scrollBy(0, height);
     }, height);
-    await wait(800);
+    await wait(1000);
     curVideos = await page.evaluate(noOfVideos, selector);
     if (curVideos <= prev) {
       break;

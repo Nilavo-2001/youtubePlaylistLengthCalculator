@@ -1,14 +1,14 @@
 const puppeteer = require("puppeteer");
 const url =
-  "https://www.youtube.com/playlist?list=PL1QH9gyQXfgs7foRxIbIH8wmJyDh5QzAm";
-analyse(url, 114);
+  "https://www.youtube.com/playlist?list=PLRBp0Fe2GpglJwMzaCkRtI_BqQgU_O6Oy";
+analyse(url, 313);
 const selector = "span.style-scope.ytd-thumbnail-overlay-time-status-renderer";
 let page;
 
 async function analyse(url, totalVideos) {
-  console.log(new Date().toLocaleTimeString());
+  // console.log(new Date().toLocaleTimeString());
   const browser = await puppeteer.launch({
-    headless: true,
+    headless: false,
     defaultViewport: null,
     args: ["--start-maximized"],
   });
@@ -16,19 +16,33 @@ async function analyse(url, totalVideos) {
   page = pages[0];
   await page.goto(url);
   await scrollTillEnd(totalVideos);
-  let list = await page.evaluate(getList, selector);
-  //console.log(list);
-  console.log(calTime(list));
+  //   let list = await page.evaluate(getList, selector);
+  //   //console.log(list);
+  //   console.log(calTime(list));
 }
 
 async function scrollTillEnd(totalVideos) {
   let curVideos = await page.evaluate(noOfVideos, selector);
-  while (curVideos != totalVideos) {
-    await page.evaluate(() => {
-      window.scrollBy(0, window.innerHeight);
-    });
+  let prev = curVideos;
+  await page.waitForSelector(".style-scope.ytd-browse.grid.grid-disabled");
+  let height = await page.evaluate((selector) => {
+    return document.querySelector(selector).scrollHeight;
+  }, ".style-scope.ytd-browse.grid.grid-disabled");
+  console.log(new Date().toLocaleTimeString());
+  while (true) {
+    //console.log(height);
+    await page.evaluate((height) => {
+      window.scrollBy(0, height);
+    }, height);
+    await wait(800);
     curVideos = await page.evaluate(noOfVideos, selector);
+    if (curVideos <= prev) {
+      break;
+    }
+    prev = curVideos;
   }
+  console.log(new Date().toLocaleTimeString());
+  console.log("I am out");
 }
 function noOfVideos(selector) {
   let videos = document.querySelectorAll(selector);
@@ -66,4 +80,9 @@ function calTime(list) {
   let totalHours = parseInt(hours + (minutes + parseInt(seconds / 60)) / 60);
   console.log(new Date().toLocaleTimeString());
   return `Hours: ${totalHours} Minutes: ${totalMinutes} Seconds: ${totalSeconds}`;
+}
+function wait(time) {
+  return new Promise((resolve) => {
+    setTimeout(resolve, time);
+  });
 }

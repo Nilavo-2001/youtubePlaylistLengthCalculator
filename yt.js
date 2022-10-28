@@ -1,11 +1,11 @@
 const puppeteer = require("puppeteer");
 const url =
   "https://www.youtube.com/playlist?list=PLRBp0Fe2GpglJwMzaCkRtI_BqQgU_O6Oy";
-analyse(url, 313);
+analyse(url);
 const selector = "span.style-scope.ytd-thumbnail-overlay-time-status-renderer";
 let page;
 
-async function analyse(url, totalVideos) {
+async function analyse(url) {
   const browser = await puppeteer.launch({
     headless: false,
     defaultViewport: null,
@@ -14,11 +14,16 @@ async function analyse(url, totalVideos) {
   const pages = await browser.pages();
   page = pages[0];
   await page.goto(url);
-  await scrollTillEnd(totalVideos);
+  await scrollTillEnd();
   let list = await page.evaluate(getList, selector);
+  let reqTime = calTime(list);
+  page.evaluate((reqTime) => {
+    window.alert(reqTime);
+  }, reqTime);
+  console.log(reqTime);
 }
 
-async function scrollTillEnd(totalVideos) {
+async function scrollTillEnd() {
   let curVideos = await page.evaluate(noOfVideos, selector);
   let prev = curVideos;
   await page.waitForSelector(".style-scope.ytd-browse.grid.grid-disabled");
@@ -29,7 +34,7 @@ async function scrollTillEnd(totalVideos) {
     await page.evaluate((height) => {
       window.scrollBy(0, height);
     }, height);
-    await wait(800);
+    await wait(1000);
     curVideos = await page.evaluate(noOfVideos, selector);
     if (curVideos <= prev) {
       break;
@@ -37,10 +42,12 @@ async function scrollTillEnd(totalVideos) {
     prev = curVideos;
   }
 }
+
 function noOfVideos(selector) {
   let videos = document.querySelectorAll(selector);
   return videos.length;
 }
+
 function getList(selector) {
   let videos = document.querySelectorAll(selector);
   let list = [];
@@ -53,6 +60,7 @@ function getList(selector) {
   });
   return list;
 }
+
 function calTime(list) {
   let hours = 0;
   let minutes = 0;
@@ -73,6 +81,7 @@ function calTime(list) {
   let totalHours = parseInt(hours + (minutes + parseInt(seconds / 60)) / 60);
   return `Hours: ${totalHours} Minutes: ${totalMinutes} Seconds: ${totalSeconds}`;
 }
+
 function wait(time) {
   return new Promise((resolve) => {
     setTimeout(resolve, time);

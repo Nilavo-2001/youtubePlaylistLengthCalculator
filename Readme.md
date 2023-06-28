@@ -1,4 +1,4 @@
-important: node must be installed
+# important: node must be installed
 
 # Point to be Noted
 
@@ -11,6 +11,6 @@ This API is completely built from scratch without using any youtube data API
 3. install all the dependencies mentioned on the package.json file
 4. run node index.js to start the server
 
-# postman
+# Postman
 
-postman collection attached with repo , download and import the collection in postman
+Postman collection attached with repo , download and import the collection in postman

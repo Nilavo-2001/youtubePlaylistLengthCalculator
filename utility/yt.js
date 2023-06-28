@@ -1,7 +1,4 @@
 const puppeteer = require("puppeteer");
-const url =
-  "https://www.youtube.com/playlist?list=PLpyc33gOcbVA4qXMoQ5vmhefTruk5t9lt";
-analyse(url);
 const selector = "span.style-scope.ytd-thumbnail-overlay-time-status-renderer";
 let page;
 

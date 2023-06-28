@@ -12,7 +12,7 @@ require('./config/mongoose');
 
 
 //server listening
-const port = 3000 || 6001;
+const port = 3001 || 6001;
 app.listen(port, (err) => {
     if (err) {
         console.log(err);

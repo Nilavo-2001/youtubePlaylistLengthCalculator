@@ -4,11 +4,9 @@ let page;
 
 async function analyse(url) {
   const browser = await puppeteer.launch({
-    executablePath: 'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe',
     headless: true,
     defaultViewport: null,
     args: [
-      '--profile-directory=Profile 1',
       '--start-maximized'
     ],
   });

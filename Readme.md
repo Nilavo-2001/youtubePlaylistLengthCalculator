@@ -13,4 +13,7 @@ This API is completely built from scratch without using any youtube data API
 
 # Postman
 
-Postman collection attached with repo , download and import the collection in postman
+Postman collection attached with repo , download and import the collection in postman 
+
+# Response Time
+This API replicating human scrolling , so the min response time is 3-4 secs and can go upto minutes depending on the size of the youtube playlist

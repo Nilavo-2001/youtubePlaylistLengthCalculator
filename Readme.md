@@ -11,6 +11,9 @@ This API is completely built from scratch without using any youtube data API
 3. install all the dependencies mentioned on the package.json file
 4. run node index.js to start the server
 
+# Token Validation
+JWT token generated after login is valid for 24hrs
+
 # Postman
 
 Postman collection attached with repo , download and import the collection in postman 

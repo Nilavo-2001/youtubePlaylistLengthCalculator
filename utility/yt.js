@@ -1,15 +1,19 @@
 const puppeteer = require("puppeteer");
 const url =
-  "https://www.youtube.com/playlist?list=PLRBp0Fe2GpglJwMzaCkRtI_BqQgU_O6Oy";
+  "https://www.youtube.com/playlist?list=PLpyc33gOcbVA4qXMoQ5vmhefTruk5t9lt";
 analyse(url);
 const selector = "span.style-scope.ytd-thumbnail-overlay-time-status-renderer";
 let page;
 
 async function analyse(url) {
   const browser = await puppeteer.launch({
-    headless: false,
+    executablePath: 'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe',
+    headless: true,
     defaultViewport: null,
-    args: ["--start-maximized"],
+    args: [
+      '--profile-directory=Profile 1',
+      '--start-maximized'
+    ],
   });
   const pages = await browser.pages();
   page = pages[0];
@@ -21,9 +25,11 @@ async function analyse(url) {
     window.alert(reqTime);
   }, reqTime);
   console.log(reqTime);
+  return reqTime;
 }
 
 async function scrollTillEnd() {
+  // all the html appear only when the page is scrolled till end
   let curVideos = await page.evaluate(noOfVideos, selector);
   let prev = curVideos;
   await page.waitForSelector(".style-scope.ytd-browse.grid.grid-disabled");
@@ -34,7 +40,7 @@ async function scrollTillEnd() {
     await page.evaluate((height) => {
       window.scrollBy(0, height);
     }, height);
-    await wait(1000);
+    await wait(2000);
     curVideos = await page.evaluate(noOfVideos, selector);
     if (curVideos <= prev) {
       break;
@@ -84,6 +90,8 @@ function calTime(list) {
 
 function wait(time) {
   return new Promise((resolve) => {
-    setTimeout(resolve, time);
+    setTimeout(resolve, time); //call resolve after the set time
   });
 }
+
+module.exports = analyse;
